@@ -3,223 +3,274 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You Charu ❤️</title>
+<title>Thank You Charu</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(-45deg,#12001f,#1e0033,#2a004f,#1a002b);
+background-size:400% 400%;
+animation:gradientShift 18s ease infinite;
+color:white;
+}
+@keyframes gradientShift{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
-body {
-  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #333;
+canvas#particles{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+z-index:0;
 }
 
-.section {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 20px;
-  text-align: center;
+.section{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:25px;
+opacity:0;
+transform:translateY(30px);
+transition:all .7s cubic-bezier(.4,0,.2,1);
+z-index:2;
+pointer-events:none;
+}
+.section.active{
+opacity:1;
+transform:translateY(0);
+pointer-events:auto;
 }
 
-.active {
-  display: flex;
-  animation: fade 0.8s ease;
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(25px);
+border-radius:25px;
+padding:25px;
+max-width:420px;
+width:100%;
+box-shadow:
+0 0 40px rgba(255,105,180,.25),
+0 15px 40px rgba(0,0,0,.5);
+animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
 }
 
-@keyframes fade {
-  from {opacity:0; transform:scale(0.95);}
-  to {opacity:1; transform:scale(1);}
+button{
+padding:12px 22px;
+margin:10px;
+border:none;
+border-radius:30px;
+background:linear-gradient(135deg,#ff4da6,#ff85c1);
+color:white;
+font-size:15px;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 0 15px rgba(255,105,180,.5);
+}
+button:active{transform:scale(.95)}
+.music-btn.active-song{
+box-shadow:0 0 25px rgba(255,105,180,1);
+transform:scale(1.05);
 }
 
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  border: none;
-  border-radius: 25px;
-  background: #ff4e6a;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+h1,h2{margin-bottom:15px}
+p{margin-bottom:10px;opacity:0;transform:translateY(15px);transition:.6s ease}
+p.show{opacity:1;transform:translateY(0)}
 
-button:hover {
-  transform: scale(1.05);
+#gameArea{position:relative;width:100%;height:50vh}
+.heart{
+position:absolute;
+width:20px;height:20px;
+background:radial-gradient(circle,#ff85c1,#ff4da6);
+border-radius:50%;
+animation:fall linear forwards;
 }
-
-.card {
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(15px);
-  padding: 25px;
-  border-radius: 20px;
-  max-width: 400px;
-  max-height: 75vh;
-  overflow-y: auto;
+@keyframes fall{
+to{transform:translateY(80vh)}
 }
+#response{margin-top:15px;font-weight:bold;opacity:0;transition:.5s}
+#response.show{opacity:1}
 
-.music-btn.active-song {
-  background: #ff2e5f;
+.envelope{
+width:80px;height:60px;
+background:rgba(255,255,255,.2);
+border-radius:10px;
+position:relative;
+margin-bottom:20px;
+transform-origin:top;
+animation:openEnvelope 1s ease forwards;
 }
-
-#game-area {
-  position: relative;
-  width: 100%;
-  height: 60vh;
-}
-
-.heart {
-  position: absolute;
-  font-size: 24px;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(80vh);
-  }
+@keyframes openEnvelope{
+0%{transform:rotateX(90deg)}
+100%{transform:rotateX(0)}
 }
 </style>
 </head>
+
 <body>
 
-<!-- AUDIO -->
+<canvas id="particles"></canvas>
+
 <audio id="song1" src="music/song1.mp3"></audio>
 <audio id="song2" src="music/song2.mp3"></audio>
 <audio id="song3" src="music/song3.mp3"></audio>
 
-<!-- 1️⃣ INTRO -->
+<!-- INTRO -->
 <div class="section active" id="intro">
-  <h1>For Charu 💖</h1>
-  <button onclick="nextSection('music')">Start</button>
+<h1>For Charu</h1>
+<button onclick="goTo('music')">Start</button>
 </div>
 
-<!-- 2️⃣ MUSIC -->
+<!-- MUSIC -->
 <div class="section" id="music">
-  <h2>Choose a Song 🎵</h2>
-  <button class="music-btn" onclick="playSong(1,this)">Song 1</button>
-  <button class="music-btn" onclick="playSong(2,this)">Song 2</button>
-  <button class="music-btn" onclick="playSong(3,this)">Song 3</button>
-  <button onclick="nextSection('notes')">Continue ➜</button>
+<div class="card">
+<h2>Choose a Song</h2>
+<button class="music-btn" onclick="playSong(1,this)">Song 1</button>
+<button class="music-btn" onclick="playSong(2,this)">Song 2</button>
+<button class="music-btn" onclick="playSong(3,this)">Song 3</button>
+<button onclick="goTo('notes')">Continue</button>
+</div>
 </div>
 
-<!-- 3️⃣ SMALL NOTES -->
+<!-- SMALL NOTES -->
 <div class="section" id="notes">
-  <div class="card">
-    <p>You are stronger than you think.</p>
-    <p>You shine even without trying.</p>
-    <p>You make ordinary days better.</p>
-    <button onclick="nextSection('game')">Next ➜</button>
-  </div>
+<div class="card">
+<p>You are stronger than you think.</p>
+<p>You inspire without trying.</p>
+<p>You make every moment brighter.</p>
+<button onclick="goTo('game')">Next</button>
+</div>
 </div>
 
-<!-- 4️⃣ HEART GAME -->
+<!-- GAME -->
 <div class="section" id="game">
-  <h2>Catch 5 Hearts ❤️</h2>
-  <div id="game-area"></div>
-  <p>Score: <span id="score">0</span>/5</p>
+<div class="card">
+<h2>Catch 5 Hearts</h2>
+<div id="gameArea"></div>
+<p>Score: <span id="score">0</span>/5</p>
+</div>
 </div>
 
-<!-- 5️⃣ FINAL LETTER -->
+<!-- FINAL -->
 <div class="section" id="final">
-  <div class="card">
+<div class="card">
+<div class="envelope"></div>
 
-<h2>Hello Charu! 💌</h2>
+<h2>Hello Charu!</h2>
 
-<p>
-Istg, I’ve never seen this much hardworking, brave, and at the same time kind and beautiful girl in my life.
-</p>
-
-<p>
-The way you carry yourself, the way you handle things, the way you stay strong even when things aren’t easy — it genuinely inspires me.
-</p>
-
-<p>
-On this Proposal Day, I just want to be honest.
-Somewhere between our conversations and your smile, you became someone very special to me.
-</p>
-
-<p>
-So today, I want to ask you something simple but meaningful…
-Will you let me be part of your world?
-</p>
+<p>Istg, I’ve never seen this much hardworking, brave, and at the same time kind and beautiful girl in my life.</p>
+<p>The way you carry yourself, the way you handle things, the way you stay strong even when things aren’t easy — it genuinely inspires me.</p>
+<p>On this Proposal Day, I just want to be honest. Somewhere between our conversations and your smile, you became someone very special to me.</p>
+<p>So today, I want to ask you something simple but meaningful… Will you let me be part of your world?</p>
 
 <div id="response"></div>
 
-<button onclick="yesAnswer()">Yes ❤️</button>
-<button id="noBtn" onmouseover="moveNo()">No 😅</button>
+<button onclick="yesAnswer()">Yes</button>
+<button id="noBtn" ontouchstart="moveNo()">No</button>
 
-  </div>
+</div>
 </div>
 
 <script>
-let currentSong = null;
+// PARTICLES
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let particles=[];
+for(let i=0;i<60;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2+1,
+d:Math.random()*1
+});
+}
+function drawParticles(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="rgba(255,105,180,0.5)";
+particles.forEach(p=>{
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fill();
+p.y+=p.d;
+if(p.y>canvas.height)p.y=0;
+});
+requestAnimationFrame(drawParticles);
+}
+drawParticles();
 
-function playSong(num,btn){
-  if(currentSong){
-    currentSong.pause();
-    currentSong.currentTime = 0;
-  }
-  document.querySelectorAll('.music-btn').forEach(b=>b.classList.remove('active-song'));
-  btn.classList.add('active-song');
-  currentSong = document.getElementById("song"+num);
-  currentSong.play();
+// SECTION NAV
+function goTo(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+if(id==="final"){
+setTimeout(()=> {
+document.querySelectorAll("#final p").forEach((el,i)=>{
+setTimeout(()=>el.classList.add("show"), i*400);
+});
+},500);
+}
 }
 
-function nextSection(id){
-  document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+// MUSIC
+let currentSong=null;
+function playSong(n,btn){
+if(currentSong){currentSong.pause();currentSong.currentTime=0;}
+document.querySelectorAll('.music-btn').forEach(b=>b.classList.remove('active-song'));
+btn.classList.add('active-song');
+currentSong=document.getElementById("song"+n);
+currentSong.play();
 }
 
+// GAME
 let score=0;
-const gameArea=document.getElementById("game-area");
-
-function spawnHeart(){
-  const heart=document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML="❤️";
-  heart.style.left=Math.random()*90+"%";
-  heart.style.animationDuration=(Math.random()*2+3)+"s";
-  gameArea.appendChild(heart);
-
-  heart.onclick=()=>{
-    score++;
-    document.getElementById("score").innerText=score;
-    heart.remove();
-    if(score>=5){
-      nextSection('final');
-    }
-  };
-
-  setTimeout(()=>heart.remove(),5000);
+const gameArea=document.getElementById("gameArea");
+function spawn(){
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.style.left=Math.random()*90+"%";
+heart.style.animationDuration=(Math.random()*2+3)+"s";
+gameArea.appendChild(heart);
+heart.onclick=()=>{
+score++;
+document.getElementById("score").innerText=score;
+heart.remove();
+if(score>=5)goTo("final");
+};
+setTimeout(()=>heart.remove(),5000);
 }
+setInterval(spawn,800);
 
-setInterval(spawnHeart,800);
-
+// YES
 function yesAnswer(){
-  document.getElementById("response").innerHTML="<p style='margin-top:15px;font-weight:bold;'>You just made me the happiest person ❤️</p>";
+const res=document.getElementById("response");
+res.innerText="You just made me the happiest person.";
+res.classList.add("show");
 }
 
+// NO MOVE
 function moveNo(){
-  const btn=document.getElementById("noBtn");
-  btn.style.position="absolute";
-  btn.style.left=Math.random()*70+"%";
-  btn.style.top=Math.random()*70+"%";
+const btn=document.getElementById("noBtn");
+btn.style.position="absolute";
+btn.style.left=Math.random()*70+"%";
+btn.style.top=Math.random()*60+"%";
 }
 </script>
 
 </body>
-  </html>
+</html>
