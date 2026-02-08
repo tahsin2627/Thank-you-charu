@@ -3,75 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You Charu</title>
+<title>For Charu</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+
 body{
-height:100vh;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
+font-family:'Inter',sans-serif;
 background:linear-gradient(-45deg,#12001f,#1e0033,#2a004f,#1a002b);
 background-size:400% 400%;
-animation:gradientShift 18s ease infinite;
+animation:gradientShift 20s ease infinite;
 color:white;
+line-height:1.6;
+overflow-x:hidden;
 }
+
 @keyframes gradientShift{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
 }
 
-canvas#particles{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-z-index:0;
+section{
+padding:80px 20px;
+max-width:700px;
+margin:auto;
+opacity:0;
+transform:translateY(40px);
+transition:all 1s cubic-bezier(.4,0,.2,1);
 }
 
-.section{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-padding:25px;
-opacity:0;
-transform:translateY(30px);
-transition:all .7s cubic-bezier(.4,0,.2,1);
-z-index:2;
-pointer-events:none;
-}
-.section.active{
+section.show{
 opacity:1;
 transform:translateY(0);
-pointer-events:auto;
+}
+
+h1,h2{
+font-family:'Playfair Display',serif;
+font-weight:600;
+margin-bottom:20px;
+letter-spacing:.5px;
+}
+
+.hero{
+text-align:center;
+padding-top:120px;
+}
+
+.scroll-indicator{
+margin-top:40px;
+opacity:.6;
+font-size:14px;
+animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(8px)}
 }
 
 .card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(25px);
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(20px);
 border-radius:25px;
 padding:25px;
-max-width:420px;
-width:100%;
+margin-bottom:25px;
 box-shadow:
-0 0 40px rgba(255,105,180,.25),
-0 15px 40px rgba(0,0,0,.5);
-animation:float 6s ease-in-out infinite;
+0 0 40px rgba(255,105,180,.15),
+0 20px 40px rgba(0,0,0,.4);
 }
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-8px)}
+
+.music-card{
+padding:20px;
+margin-bottom:15px;
+border-radius:20px;
+background:rgba(255,255,255,.08);
+transition:.4s;
+}
+
+.music-card.active{
+box-shadow:0 0 25px rgba(255,105,180,.7);
+transform:scale(1.02);
 }
 
 button{
-padding:12px 22px;
-margin:10px;
+padding:12px 25px;
 border:none;
 border-radius:30px;
 background:linear-gradient(135deg,#ff4da6,#ff85c1);
@@ -79,44 +97,47 @@ color:white;
 font-size:15px;
 cursor:pointer;
 transition:.3s;
-box-shadow:0 0 15px rgba(255,105,180,.5);
+margin-top:10px;
 }
+
 button:active{transform:scale(.95)}
-.music-btn.active-song{
-box-shadow:0 0 25px rgba(255,105,180,1);
-transform:scale(1.05);
+
+#gameArea{
+position:relative;
+height:300px;
+margin-top:20px;
 }
 
-h1,h2{margin-bottom:15px}
-p{margin-bottom:10px;opacity:0;transform:translateY(15px);transition:.6s ease}
-p.show{opacity:1;transform:translateY(0)}
-
-#gameArea{position:relative;width:100%;height:50vh}
 .heart{
 position:absolute;
-width:20px;height:20px;
+width:18px;
+height:18px;
 background:radial-gradient(circle,#ff85c1,#ff4da6);
 border-radius:50%;
 animation:fall linear forwards;
 }
+
 @keyframes fall{
-to{transform:translateY(80vh)}
+to{transform:translateY(320px)}
 }
-#response{margin-top:15px;font-weight:bold;opacity:0;transition:.5s}
+
+#response{
+margin-top:15px;
+opacity:0;
+transition:.6s;
+}
+
 #response.show{opacity:1}
 
-.envelope{
-width:80px;height:60px;
-background:rgba(255,255,255,.2);
-border-radius:10px;
+#noBtn{
 position:relative;
-margin-bottom:20px;
-transform-origin:top;
-animation:openEnvelope 1s ease forwards;
 }
-@keyframes openEnvelope{
-0%{transform:rotateX(90deg)}
-100%{transform:rotateX(0)}
+
+canvas{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+z-index:-1;
 }
 </style>
 </head>
@@ -125,84 +146,101 @@ animation:openEnvelope 1s ease forwards;
 
 <canvas id="particles"></canvas>
 
-<audio id="song1" src="music/song1.mp3"></audio>
-<audio id="song2" src="music/song2.mp3"></audio>
-<audio id="song3" src="music/song3.mp3"></audio>
-
-<!-- INTRO -->
-<div class="section active" id="intro">
+<!-- HERO -->
+<section class="hero">
 <h1>For Charu</h1>
-<button onclick="goTo('music')">Start</button>
-</div>
+<p>Some things are better said slowly.</p>
+<div class="scroll-indicator">Scroll</div>
+</section>
+
+<!-- THOUGHTS -->
+<section>
+<h2>A Few Thoughts</h2>
+<div class="card">You inspire without even trying.</div>
+<div class="card">Your strength is quiet but powerful.</div>
+<div class="card">You make ordinary days feel lighter.</div>
+</section>
 
 <!-- MUSIC -->
-<div class="section" id="music">
-<div class="card">
-<h2>Choose a Song</h2>
-<button class="music-btn" onclick="playSong(1,this)">Song 1</button>
-<button class="music-btn" onclick="playSong(2,this)">Song 2</button>
-<button class="music-btn" onclick="playSong(3,this)">Song 3</button>
-<button onclick="goTo('notes')">Continue</button>
-</div>
+<section>
+<h2>Some Music</h2>
+
+<div class="music-card">
+<p>Song One</p>
+<button onclick="playSong(1,this)">Play</button>
 </div>
 
-<!-- SMALL NOTES -->
-<div class="section" id="notes">
-<div class="card">
-<p>You are stronger than you think.</p>
-<p>You inspire without trying.</p>
-<p>You make every moment brighter.</p>
-<button onclick="goTo('game')">Next</button>
+<div class="music-card">
+<p>Song Two</p>
+<button onclick="playSong(2,this)">Play</button>
 </div>
+
+<div class="music-card">
+<p>Song Three</p>
+<button onclick="playSong(3,this)">Play</button>
 </div>
+
+</section>
 
 <!-- GAME -->
-<div class="section" id="game">
-<div class="card">
-<h2>Catch 5 Hearts</h2>
+<section>
+<h2>A Small Challenge</h2>
+<p>Catch 5 hearts.</p>
 <div id="gameArea"></div>
 <p>Score: <span id="score">0</span>/5</p>
-</div>
-</div>
+</section>
 
-<!-- FINAL -->
-<div class="section" id="final">
-<div class="card">
-<div class="envelope"></div>
-
+<!-- FINAL LETTER -->
+<section id="final">
 <h2>Hello Charu!</h2>
 
+<div class="card">
 <p>Istg, I’ve never seen this much hardworking, brave, and at the same time kind and beautiful girl in my life.</p>
 <p>The way you carry yourself, the way you handle things, the way you stay strong even when things aren’t easy — it genuinely inspires me.</p>
 <p>On this Proposal Day, I just want to be honest. Somewhere between our conversations and your smile, you became someone very special to me.</p>
 <p>So today, I want to ask you something simple but meaningful… Will you let me be part of your world?</p>
 
-<div id="response"></div>
-
 <button onclick="yesAnswer()">Yes</button>
 <button id="noBtn" ontouchstart="moveNo()">No</button>
 
+<div id="response"></div>
+
 </div>
-</div>
+</section>
+
+<audio id="song1" src="music/song1.mp3"></audio>
+<audio id="song2" src="music/song2.mp3"></audio>
+<audio id="song3" src="music/song3.mp3"></audio>
 
 <script>
-// PARTICLES
+// Scroll reveal
+const sections=document.querySelectorAll("section");
+window.addEventListener("scroll",()=>{
+sections.forEach(sec=>{
+const rect=sec.getBoundingClientRect();
+if(rect.top<window.innerHeight-100){
+sec.classList.add("show");
+}
+});
+});
+
+// Particles
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
 canvas.width=window.innerWidth;
 canvas.height=window.innerHeight;
 let particles=[];
-for(let i=0;i<60;i++){
+for(let i=0;i<50;i++){
 particles.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
 r:Math.random()*2+1,
-d:Math.random()*1
+d:Math.random()*0.5+0.2
 });
 }
-function drawParticles(){
+function draw(){
 ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle="rgba(255,105,180,0.5)";
+ctx.fillStyle="rgba(255,105,180,0.4)";
 particles.forEach(p=>{
 ctx.beginPath();
 ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
@@ -210,34 +248,21 @@ ctx.fill();
 p.y+=p.d;
 if(p.y>canvas.height)p.y=0;
 });
-requestAnimationFrame(drawParticles);
+requestAnimationFrame(draw);
 }
-drawParticles();
+draw();
 
-// SECTION NAV
-function goTo(id){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-if(id==="final"){
-setTimeout(()=> {
-document.querySelectorAll("#final p").forEach((el,i)=>{
-setTimeout(()=>el.classList.add("show"), i*400);
-});
-},500);
-}
-}
-
-// MUSIC
+// Music
 let currentSong=null;
 function playSong(n,btn){
 if(currentSong){currentSong.pause();currentSong.currentTime=0;}
-document.querySelectorAll('.music-btn').forEach(b=>b.classList.remove('active-song'));
-btn.classList.add('active-song');
+document.querySelectorAll(".music-card").forEach(c=>c.classList.remove("active"));
+btn.parentElement.classList.add("active");
 currentSong=document.getElementById("song"+n);
 currentSong.play();
 }
 
-// GAME
+// Game
 let score=0;
 const gameArea=document.getElementById("gameArea");
 function spawn(){
@@ -250,25 +275,46 @@ heart.onclick=()=>{
 score++;
 document.getElementById("score").innerText=score;
 heart.remove();
-if(score>=5)goTo("final");
 };
 setTimeout(()=>heart.remove(),5000);
 }
-setInterval(spawn,800);
+setInterval(spawn,900);
 
-// YES
+// Yes
 function yesAnswer(){
 const res=document.getElementById("response");
 res.innerText="You just made me the happiest person.";
 res.classList.add("show");
+confetti();
 }
 
-// NO MOVE
+// No move
 function moveNo(){
 const btn=document.getElementById("noBtn");
-btn.style.position="absolute";
-btn.style.left=Math.random()*70+"%";
-btn.style.top=Math.random()*60+"%";
+btn.style.left=Math.random()*100+"px";
+btn.style.top=Math.random()*50+"px";
+}
+
+// Simple confetti
+function confetti(){
+for(let i=0;i<100;i++){
+let conf=document.createElement("div");
+conf.style.position="fixed";
+conf.style.width="6px";
+conf.style.height="6px";
+conf.style.background="#ff85c1";
+conf.style.left=Math.random()*100+"vw";
+conf.style.top="0";
+conf.style.opacity="0.8";
+conf.style.zIndex="999";
+conf.style.transition="1.5s ease-out";
+document.body.appendChild(conf);
+setTimeout(()=>{
+conf.style.top="100vh";
+conf.style.opacity="0";
+},10);
+setTimeout(()=>conf.remove(),1600);
+}
 }
 </script>
 
